@@ -1,7 +1,6 @@
 import os
 import json
-import timeit
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 
 
 class AdvancementPathsList:
@@ -66,17 +65,3 @@ class AdvancementPathsList:
         :return: All advancements in all extensions
         """
         return self._bacap_advancements + self._bacaped_advancements
-
-
-if __name__ == '__main__':
-    print(AdvancementPathsList().all_bacap_advancements)
-    print(AdvancementPathsList().get_advancements_from_tab(tab="building"))
-
-    num_runs = 10000
-    elapsed_time = timeit.timeit("AdvancementPathsList().get_advancements_from_tab('adventure')",
-                                 setup="from __main__ import AdvancementPathsList",
-                                 number=num_runs)
-    average_time = elapsed_time / num_runs
-
-    print(f"Время выполнения {num_runs} раз: {elapsed_time} секунд.")
-    print(f"Среднее время выполнения: {average_time} секунд.")

@@ -1,9 +1,7 @@
 import json
 import os
 import re
-import timeit
 from typing import Optional, Tuple, Dict
-from AdvancementPathsList import AdvancementPathsList
 from AdvancementParsedPaths import AdvancementParsedPaths
 
 

@@ -43,7 +43,6 @@ class AdvancementEmbed:
         if advancement.trophy:
             self._embed.add_field(name='Trophy:', value=advancement.trophy)
 
-
     @property
     def embed(self):
         return self._embed
