@@ -1,18 +1,21 @@
 import json
 import os
 import re
+import timeit
 from typing import Optional, Tuple, Dict
-from AdvancementList import AdvancementList
+from AdvancementPathsList import AdvancementPathsList
 from AdvancementParsedPaths import AdvancementParsedPaths
 
 
 class Advancement:
     def __init__(self, advancement_path: str):
-        splitted_advancement_path = advancement_path.split(os.sep)
+        advancement_paths = AdvancementParsedPaths(advancement_path)
+
+        splitted_advancement_path = advancement_paths.advancement.split(os.sep)
 
         self._internal_name = f'{os.sep}'.join(splitted_advancement_path[2:])
 
-        self._tab = advancement_path.split(os.sep)[-2]
+        self._tab = advancement_paths.advancement.split(os.sep)[-2]
 
         if splitted_advancement_path[0] != "bacap":
             self._expansion = self._internal_name.split("\\")[0]
@@ -32,19 +35,17 @@ class Advancement:
 
             self._adv_type = self.__determine_type(advancement_json)
 
-        extra_paths = AdvancementParsedPaths(advancement_path)
-
         self._reward, self._reward_count = None, None
-        if extra_paths.reward:
-            self._reward, self._reward_count = self.__parse_reward(extra_paths.reward)
+        if advancement_paths.reward:
+            self._reward, self._reward_count = self.__parse_reward(advancement_paths.reward)
 
         self._experience = None
-        if extra_paths.experience:
-            self._experience = self.__parse_experience(extra_paths.experience)
+        if advancement_paths.experience:
+            self._experience = self.__parse_experience(advancement_paths.experience)
 
         self._trophy = None
-        if extra_paths.trophy:
-            self._trophy = self.__parse_trophy(extra_paths.trophy)
+        if advancement_paths.trophy:
+            self._trophy = self.__parse_trophy(advancement_paths.trophy)
 
     @staticmethod
     def __determine_type(advancement):
@@ -174,9 +175,3 @@ class Advancement:
             'internal_parent': self.internal_parent,
             'icon_id': self.icon_id
         }
-
-
-if __name__ == "__main__":
-    print(Advancement('../bacap/data/minecraft/advancement/nether/ride_strider.json').get_all_properties())
-    for i in AdvancementList().bacap_advancements:
-        print(Advancement(i))

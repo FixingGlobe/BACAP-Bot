@@ -83,6 +83,5 @@ class AdvancementParsedPaths:
             return actual_path
         return None
 
-
 if __name__ == '__main__':
     print(AdvancementParsedPaths.minecraft_parent_to_file_path("bacaped:adventure/advancement_info"))

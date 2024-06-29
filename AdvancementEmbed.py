@@ -1,7 +1,7 @@
 import os
 
 import disnake
-from Advancements.Advancement import Advancement
+from Advancement import Advancement
 import Utils
 
 

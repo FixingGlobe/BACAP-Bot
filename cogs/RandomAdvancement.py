@@ -1,9 +1,9 @@
 import disnake
 from disnake.ext import commands
-from Advancements.AdvancementList import AdvancementList
+from AdvancementPathsList import AdvancementPathsList
 import random
 from AdvancementEmbed import AdvancementEmbed
-from Advancements.Advancement import Advancement
+from Advancement import Advancement
 
 
 class RandomAdvancement(commands.Cog):
@@ -13,7 +13,7 @@ class RandomAdvancement(commands.Cog):
 
     @commands.slash_command(name="random_advancement", description="Returns a random advancement from BACAP")
     async def random_advancement(self, inter: disnake.ApplicationCommandInteraction):
-        adv = Advancement(random.choice(AdvancementList().bacap_advancements + AdvancementList().bacaped_advancements))
+        adv = Advancement(random.choice(AdvancementPathsList().all_bacap_advancements + AdvancementPathsList().all_bacaped_advancements))
         await inter.response.send_message(embed=AdvancementEmbed(adv).embed)
 
 
