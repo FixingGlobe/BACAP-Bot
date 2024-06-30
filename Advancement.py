@@ -2,6 +2,8 @@ import json
 import os
 import re
 from typing import Optional, Tuple, Dict
+
+import AdvancementUtils
 from AdvancementParsedPaths import AdvancementParsedPaths
 
 
@@ -31,7 +33,7 @@ class Advancement:
 
             self._icon_id = advancement_json['display']["icon"]["id"]
 
-            self._adv_type = self.__determine_type(advancement_json)
+            self._adv_type = AdvancementUtils.determine_advancement_type(advancement_json)
 
         self._reward, self._reward_count = None, None
         if advancement_paths.reward:
@@ -44,26 +46,6 @@ class Advancement:
         self._trophy = None
         if advancement_paths.trophy:
             self._trophy = self.__parse_trophy(advancement_paths.trophy)
-
-    @staticmethod
-    def __determine_type(advancement):
-        frame = advancement['display'].get("frame", "")
-        description_color = advancement['display']['description'].get("color", "")
-
-        if frame == "task":
-            return "task"
-        if frame == "goal":
-            return "goal"
-
-        if description_color == "yellow":
-            return "milestone"
-        if description_color == "gold":
-            return "advancement_legend"
-        if description_color == "#FF2A2A":
-            return "super_challenge"
-        if advancement['display'].get("hidden", False):
-            return "hidden"
-        return "challenge"
 
     @staticmethod
     def __parse_reward(reward_path: str) -> Tuple[Optional[str], Optional[int]]:

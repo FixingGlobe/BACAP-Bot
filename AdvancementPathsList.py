@@ -1,12 +1,9 @@
 import os
 import json
-from typing import List, Tuple
-
+from typing import List
 
 class AdvancementPathsList:
     _instance = None
-    _tabs: Tuple[str] = ('adventure', 'animal', 'bacap', 'biomes', 'building', 'challenges', 'enchanting',
-                         'end', 'farming', 'mining', 'monsters', 'nether', 'potion', 'redstone', 'statistics', 'weaponry')
 
     def __new__(cls):
         if cls._instance is None:

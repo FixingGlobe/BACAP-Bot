@@ -3,13 +3,10 @@ import os
 import disnake
 from Advancement import Advancement
 import Utils
-
+from AdvancementUtils import advancement_color
 
 class AdvancementEmbed:
     def __init__(self, advancement: Advancement):
-
-        advancement_color = {"task": 0x54fc54, "goal": 0x74defc, "challenge": 0xa800a8, "hidden": 0xfc54fc,
-                             "super_challenge": 0xfc2929, "milestone": 0xfcfc54, "advancement_legend": 0xfca800}
 
         self._embed = disnake.Embed(
             title=advancement.name,

@@ -1,0 +1,2 @@
+*.mcfunction linguist-vendored
+*.py linguist-detectable
