@@ -19,7 +19,7 @@ class RandomAdvancement(commands.Cog):
 
     @commands.slash_command(
         name="random_advancement",
-        description="Returns a random advancement from BACAP"
+        description="Returns a random advancement by criteria"
     )
     async def random_advancement(
             self,
@@ -51,7 +51,8 @@ class RandomAdvancement(commands.Cog):
 
         # Если нет, то отправляем ошибку
         return await inter.response.send_message(
-            embed=EmptyRequestEmbed(title="Advancement not found!", description="There aren't any advancements with such parameters."))
+            embed=EmptyRequestEmbed(title="Advancement not found!",
+                                    description="There aren't any advancements with such parameters.").embed)
 
 
 def setup(bot: commands.Bot):
