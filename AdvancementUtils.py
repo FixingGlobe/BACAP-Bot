@@ -132,7 +132,7 @@ def get_tab_from_path(file_path: str) -> str:
 
 
 def determine_advancement_type(advancement: dict) -> Optional[str]:
-    frame = advancement['display'].get("frame", None)
+    frame = advancement['display'].get("frame", "task")
     description_color = advancement['display']['description'].get("color", None)
 
     color_to_type = {

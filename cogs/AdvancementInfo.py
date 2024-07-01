@@ -1,15 +1,13 @@
-import time
 from typing import List
-
+import random
 import disnake
 from disnake.ext import commands
-from Embeds.AdvancementEmbed import AdvancementEmbed
+
+import Embeds.PreMadeEmbeds as Emb
 from Advancement import Advancement
 from AdvancementUtils import PathPairs
-import random
-import Embeds.PreMadeEmbeds as Emb
-
 from Embeds.EmptyRequestEmbed import EmptyRequestEmbed
+from Messages.AdvancementMessage import AdvancementMessage
 
 advancement_name_keys = tuple(PathPairs().bacap_name_pairs.keys())
 advancement_desc_keys = tuple(PathPairs().bacap_desc_pairs.keys())
@@ -35,7 +33,7 @@ async def autocomplete_advancement_description(inter: disnake.ApplicationCommand
 
     descs = []
     lowered_user_input = user_input.lower()
-    for desc in advancement_name_keys:
+    for desc in advancement_desc_keys:
         if lowered_user_input in desc.lower():
             descs.append(desc)
             if len(descs) == 10:
@@ -73,17 +71,12 @@ class AdvancementInfo(commands.Cog):
                 embed=EmptyRequestEmbed(title="Empty Request",
                                         description="Use `name` or `description` parameters").embed)
 
-        if adv_name:
-            path = PathPairs().bacap_name_pairs.get(adv_name, None)
-            if not path:
-                return await inter.response.send_message(embed=Emb.bad_request)
-            await inter.response.send_message(embed=AdvancementEmbed(Advancement(path)).embed)
+        path = PathPairs().bacap_name_pairs.get(adv_name, None) or PathPairs().bacap_desc_pairs.get(adv_description, None)
 
-        if adv_description:
-            path = PathPairs().bacap_desc_pairs.get(adv_description)
-            if not path:
-                return await inter.response.send_message(embed=Emb.bad_request)
-            await inter.response.send_message(embed=AdvancementEmbed(Advancement(path)).embed)
+        if path:
+            advancement = Advancement(path)
+            return await AdvancementMessage(inter=inter, advancement=advancement).send()
+        return await inter.response.send_message(embed=Emb.bad_request)
 
 
 def setup(bot: commands.Bot):

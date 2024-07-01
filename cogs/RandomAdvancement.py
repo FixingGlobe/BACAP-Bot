@@ -1,15 +1,15 @@
+import random
+
 import disnake
 from disnake.ext import commands
 
 import Utils
+import Messages.AdvancementMessage
 from AdvancementPathsList import AdvancementPathsList
-import random
-from Embeds.AdvancementEmbed import AdvancementEmbed
 from Embeds.EmptyRequestEmbed import EmptyRequestEmbed
 from Advancement import Advancement
-from AdvancementUtils import advancement_tabs as adv_tabs
-from AdvancementUtils import advancement_types as adv_types
-from AdvancementUtils import AdvancementCatalog
+from AdvancementUtils import advancement_tabs as adv_tabs, advancement_types as adv_types, AdvancementCatalog
+from Messages.AdvancementMessage import AdvancementMessage
 
 
 class RandomAdvancement(commands.Cog):
@@ -47,7 +47,7 @@ class RandomAdvancement(commands.Cog):
         # Если достижения существуют, создаем случайное и отправляем
         if possible_advancements:
             advancement = Advancement(random.choice(possible_advancements))
-            return await inter.response.send_message(embed=AdvancementEmbed(advancement).embed)
+            return await AdvancementMessage(inter=inter, advancement=advancement).send()
 
         # Если нет, то отправляем ошибку
         return await inter.response.send_message(

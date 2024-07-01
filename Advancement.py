@@ -1,9 +1,10 @@
 import json
 import os
 import re
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, TextIO
 
 import AdvancementUtils
+from Trophy import Trophy
 from AdvancementParsedPaths import AdvancementParsedPaths
 
 
@@ -45,7 +46,7 @@ class Advancement:
 
         self._trophy = None
         if advancement_paths.trophy:
-            self._trophy = self.__parse_trophy(advancement_paths.trophy)
+            self._trophy = Trophy(advancement_paths.trophy)
 
     @staticmethod
     def __parse_reward(reward_path: str) -> Tuple[Optional[str], Optional[int]]:
@@ -74,13 +75,14 @@ class Advancement:
                     return 0
 
     @staticmethod
-    def __parse_trophy(trophy_path: str) -> str:
-        with open(trophy_path, encoding="UTF-8") as trophy_file:
-            trophy_file = trophy_file.readlines()
-            for line in trophy_file:
-                if "tellraw" in line:
-                    match = re.search(r'\"translate\":\"(.*?)\"', line)
-                    return match.group(1).replace("\\\'", '\'')
+    def __read_json_save(stream: TextIO):
+        text = stream.read()
+        try:
+            return json.loads(text)
+        except json.decoder.JSONDecodeError:
+            return json.loads(text.replace("\\'", ""))
+        finally:
+            stream.close()
 
     @property
     def name(self) -> str:
@@ -117,7 +119,7 @@ class Advancement:
         return {"item": self._reward, "count": self._reward_count}
 
     @property
-    def trophy(self) -> Optional[str]:
+    def trophy(self) -> Optional[Trophy]:
         return self._trophy
 
     @property

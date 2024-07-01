@@ -38,7 +38,7 @@ class AdvancementEmbed:
             self._embed.add_field(name='Reward:', value=f"{reward_item}: {advancement.reward['count']}")
 
         if advancement.trophy:
-            self._embed.add_field(name='Trophy:', value=advancement.trophy)
+            self._embed.add_field(name='Trophy:', value=advancement.trophy.name)
 
     @property
     def embed(self):
