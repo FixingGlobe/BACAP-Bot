@@ -1,8 +1,8 @@
 import json
 
-from disnake.ext import commands
+import discord
 
-bot = commands.InteractionBot()
+bot = discord.Bot()
 
 if __name__ == "__main__":
     config = json.load(open("config.json"))

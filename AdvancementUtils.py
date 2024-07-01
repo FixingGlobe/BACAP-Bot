@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple, Set
 
 from AdvancementPathsList import AdvancementPathsList
 
@@ -99,9 +99,9 @@ class AdvancementCatalog:
         for file_path in base_paths:
             tab = get_tab_from_path(file_path)
             if tab in catalog:
-                catalog[tab].append(file_path)
+                catalog[tab].add(file_path)
             else:
-                catalog[tab] = [file_path]
+                catalog[tab] = set(file_path)
 
     @staticmethod
     def __generate_adv_type_catalog_for_path(base_paths: list, catalog: dict) -> None:
@@ -110,20 +110,20 @@ class AdvancementCatalog:
                 json_data = json.load(file)
                 adv_type = determine_advancement_type(json_data)
                 if adv_type in catalog:
-                    catalog[adv_type].append(file_path)
+                    catalog[adv_type].add(file_path)
                 else:
-                    catalog[adv_type] = [file_path]
+                    catalog[adv_type] = set(file_path)
 
-    def get_bacap_advancements_by_tab(self, tab: str) -> Optional[List[str]]:
+    def get_bacap_advancements_by_tab(self, tab: str) -> Optional[Set[str]]:
         return self._bacap_tab_catalog.get(tab, None)
 
-    def get_bacaped_advancements_by_tab(self, tab: str) -> Optional[List[str]]:
+    def get_bacaped_advancements_by_tab(self, tab: str) -> Optional[Set[str]]:
         return self._bacaped_tab_catalog.get(tab, None)
 
-    def get_bacap_advancements_by_type(self, adv_type: str) -> Optional[List[str]]:
+    def get_bacap_advancements_by_type(self, adv_type: str) -> Optional[Set[str]]:
         return self._bacap_adv_type_catalog.get(adv_type, None)
 
-    def get_bacaped_advancements_by_type(self, adv_type: str) -> Optional[List[str]]:
+    def get_bacaped_advancements_by_type(self, adv_type: str) -> Optional[Set[str]]:
         return self._bacaped_adv_type_catalog.get(adv_type, None)
 
 
@@ -139,7 +139,8 @@ def determine_advancement_type(advancement: dict) -> Optional[str]:
         "yellow": "milestone",
         "gold": "advancement_legend",
         "#FF2A2A": "super_challenge",
-        "light_purple": "hidden"
+        "light_purple": "hidden",
+        "#CCCCCC": "root"
     }
     adv_type = color_to_type.get(description_color, None)
     if adv_type:
@@ -154,10 +155,7 @@ def determine_advancement_type(advancement: dict) -> Optional[str]:
 advancement_tabs: Tuple[str, ...] = ('adventure', 'animal', 'bacap', 'biomes', 'building', 'challenges', 'enchanting',
                                      'end', 'farming', 'mining', 'monsters', 'nether', 'potion', 'redstone', 'statistics', 'weaponry')
 
-advancement_types: Tuple[str, ...] = ("task", "goal", "challenge", "super_challenge", "milestone", "advancement_legend", "hidden")
+advancement_types: Tuple[str, ...] = ("task", "goal", "challenge", "super_challenge", "milestone", "advancement_legend", "hidden", "root")
 
 advancement_color = {"task": 0x54fc54, "goal": 0x74defc, "challenge": 0xa800a8, "hidden": 0xfc54fc,
                      "super_challenge": 0xfc2929, "milestone": 0xfcfc54, "advancement_legend": 0xfca800}
-
-if __name__ == "__main__":
-    print(determine_advancement_type(json.load(open(r"bacap\data\blazeandcave\advancement\end\good_luck_getting_this_one.json"))))

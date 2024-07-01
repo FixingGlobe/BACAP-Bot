@@ -1,4 +1,4 @@
-from typing import List, Any, TextIO
+from typing import List, Any, TextIO, Set
 
 
 def cut_namespace(string_with_namespace: str) -> str:
@@ -16,10 +16,13 @@ def read_text_file(path: str) -> str:
         return file.read()
 
 
-def common_elements(*lists: List[Any]) -> List[Any]:
+def set_intersection(*sets: Set[Any]) -> List[Any]:
     """
     :param lists: Any number of lists
     :return: Elements that can be found in all lists
     """
-    sets = [set(lst) for lst in lists if lst is not None]
     return list(set.intersection(*sets))
+
+
+def hex_to_int(hex: str) -> int:
+    return int(hex.lstrip('#'), 16)

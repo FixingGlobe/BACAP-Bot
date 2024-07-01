@@ -1,4 +1,4 @@
-import disnake
+import discord
 
 from Advancement import Advancement
 from Buttons.ParentButton import ParentButton
@@ -7,10 +7,10 @@ from Embeds.AdvancementEmbed import AdvancementEmbed
 
 
 class AdvancementMessage:
-    def __init__(self, inter: disnake.MessageInteraction | disnake.ApplicationCommandInteraction, advancement: Advancement):
+    def __init__(self, inter: discord.ApplicationContext, advancement: Advancement):
         self._inter = inter
-        self._embed = AdvancementEmbed(advancement).embed
-        self._view = disnake.ui.View(timeout=900)
+        self._embed = AdvancementEmbed(advancement)
+        self._view = discord.ui.View(timeout=900)
 
         if advancement.internal_parent:
             parent = Advancement(advancement.internal_parent)
@@ -22,4 +22,4 @@ class AdvancementMessage:
                 self._view.add_item(TrophyButton(trophy=advancement.trophy))
 
     async def send(self):
-        return await self._inter.response.send_message(embed=self._embed, view=self._view)
+        return await self._inter.response.send_message(embed=self._embed.embed, view=self._view, file=self._embed.icon)

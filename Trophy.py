@@ -29,6 +29,8 @@ class Trophy:
 
         self._trophy = self._parse_trophy(trophy_text)
         self._trophy["trophy_description"] = "".join(self._trophy.get("trophy_description", "")) or None
+        if self._trophy.get("trophy_name_color"):
+            self._trophy["trophy_name_color"] = Utils.hex_to_int(self._trophy["trophy_name_color"])
 
     def _parse_trophy(self, text: str) -> dict:
         """
@@ -51,8 +53,8 @@ class Trophy:
         return self._trophy.get("trophy_name")
 
     @property
-    def color(self) -> Optional[str]:
-        return self._trophy.get("text_color")
+    def color(self) -> Optional[int]:
+        return self._trophy.get("trophy_name_color")
 
     @property
     def enchantments(self) -> Optional[List[str]]:

@@ -1,7 +1,7 @@
 from typing import List
 import random
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 
 import Embeds.PreMadeEmbeds as Emb
 from Advancement import Advancement
@@ -13,7 +13,8 @@ advancement_name_keys = tuple(PathPairs().bacap_name_pairs.keys())
 advancement_desc_keys = tuple(PathPairs().bacap_desc_pairs.keys())
 
 
-async def autocomplete_advancement_name(inter: disnake.ApplicationCommandInteraction, user_input: str) -> List[str]:
+async def autocomplete_advancement_name(self: discord.AutocompleteContext) -> List[str]:
+    user_input = self.options["description"]
     if not user_input:
         return random.choices(advancement_name_keys, k=10)
 
@@ -27,7 +28,8 @@ async def autocomplete_advancement_name(inter: disnake.ApplicationCommandInterac
     return names
 
 
-async def autocomplete_advancement_description(inter: disnake.ApplicationCommandInteraction, user_input: str) -> List[str]:
+async def autocomplete_advancement_description(self: discord.AutocompleteContext) -> List[str]:
+    user_input = self.options["description"]
     if not user_input:
         return random.choices(advancement_desc_keys, k=10)
 
@@ -51,15 +53,15 @@ class AdvancementInfo(commands.Cog):
         description="Returns advancement by name"
     )
     async def advancement_info(self,
-                               inter: disnake.ApplicationCommandInteraction,
-                               adv_name: str = commands.Param(
+                               inter: discord.ApplicationContext,
+                               adv_name: str = discord.Option(
                                    name="name",
                                    description="Name of advancement to find",
                                    autocomplete=autocomplete_advancement_name,
                                    max_length=32,
                                    default=None
                                ),
-                               adv_description: str = commands.Param(
+                               adv_description: str = discord.Option(
                                    name="description",
                                    description="Description of advancement to find",
                                    autocomplete=autocomplete_advancement_description,

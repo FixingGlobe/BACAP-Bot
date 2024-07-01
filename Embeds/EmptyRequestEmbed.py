@@ -1,6 +1,6 @@
 import os
 
-import disnake
+import discord
 
 
 class EmptyRequestEmbed:
@@ -12,23 +12,27 @@ class EmptyRequestEmbed:
         :param color: int 16 based color
         :param icon: minecraft item name without .png ex: barrier, acacia_door
         """
-        self._embed = disnake.Embed(
+        self._embed = discord.Embed(
             title=title,
             description=f"**{description}**",
             color=color,
         )
-        icon = self.__get_icon_path(icon)
-        self._embed.set_thumbnail(file=disnake.File(icon))
+        icon = self.__get_icon_path(icon=icon)
+        self._file = discord.File(self.__get_icon_path(icon), filename=icon.rsplit("/")[-1])
+        self._embed.set_thumbnail(url=f"attachment://{icon}")
 
     @staticmethod
     def __get_icon_path(icon: str):
-        default_icon_path = "assets/textures/barrier.png"
         if icon:
             icon_path = f"assets/textures/{icon}.png"
             if os.path.exists(icon_path):
                 return icon_path
-        return default_icon_path
+        return "assets/textures/barrier.png"
 
     @property
-    def embed(self) -> disnake.Embed:
+    def embed(self) -> discord.Embed:
         return self._embed
+
+    @property
+    def icon(self) -> discord.File:
+        return self._file

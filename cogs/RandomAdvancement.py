@@ -1,10 +1,9 @@
 import random
 
-import disnake
-from disnake.ext import commands
+import discord
+import discord.ext.commands as commands
 
 import Utils
-import Messages.AdvancementMessage
 from AdvancementPathsList import AdvancementPathsList
 from Embeds.EmptyRequestEmbed import EmptyRequestEmbed
 from Advancement import Advancement
@@ -23,14 +22,14 @@ class RandomAdvancement(commands.Cog):
     )
     async def random_advancement(
             self,
-            inter: disnake.ApplicationCommandInteraction,
-            tab: str = commands.Param(
+            inter: discord.ApplicationContext,
+            tab: str = discord.Option(
                 default=None,
                 name="tab",
                 description="Tab of advancement. If there are no advancements matching the parameter, it will be ignored",
                 choices=list(adv_tabs)  # Список выбора для параметра tab
             ),
-            adv_type: str = commands.Param(
+            adv_type: str = discord.Option(
                 default=None,
                 name="type",
                 description="Type of advancement. If there are no advancements matching the parameter, it will be ignored",
@@ -40,7 +39,7 @@ class RandomAdvancement(commands.Cog):
         if tab or adv_type:  # Если существует какой-то из параметров, используем сортировку
             tab_advancements = AdvancementCatalog().get_bacap_advancements_by_tab(tab)
             type_advancements = AdvancementCatalog().get_bacap_advancements_by_type(adv_type)
-            possible_advancements = Utils.common_elements(tab_advancements, type_advancements)
+            possible_advancements = Utils.set_intersection(tab_advancements, type_advancements)
         else:
             possible_advancements = AdvancementPathsList().all_bacap_advancements  # Иначе выбираем любые достижения
 
@@ -50,9 +49,9 @@ class RandomAdvancement(commands.Cog):
             return await AdvancementMessage(inter=inter, advancement=advancement).send()
 
         # Если нет, то отправляем ошибку
-        return await inter.response.send_message(
-            embed=EmptyRequestEmbed(title="Advancement not found!",
-                                    description="There aren't any advancements with such parameters.").embed)
+        embed = EmptyRequestEmbed(title="Advancement not found!",
+                                    description="There aren't any advancements with such parameters.")
+        return await inter.response.send_message(embed=embed.embed, file=embed.icon)
 
 
 def setup(bot: commands.Bot):
