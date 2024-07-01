@@ -69,16 +69,17 @@ class AdvancementInfo(commands.Cog):
                                )
                                ):
         if not adv_description and not adv_name:
+            error_embed = EmptyRequestEmbed(title="Empty Request",
+                                        description="Use `name` or `description` parameters")
             return await inter.response.send_message(
-                embed=EmptyRequestEmbed(title="Empty Request",
-                                        description="Use `name` or `description` parameters").embed)
+                embed=error_embed, file=error_embed.icon)
 
         path = PathPairs().bacap_name_pairs.get(adv_name, None) or PathPairs().bacap_desc_pairs.get(adv_description, None)
 
         if path:
             advancement = Advancement(path)
             return await AdvancementMessage(inter=inter, advancement=advancement).send()
-        return await inter.response.send_message(embed=Emb.bad_request)
+        return await inter.response.send_message(embed=Emb.bad_request, file=Emb.bad_request.icon)
 
 
 def setup(bot: commands.Bot):

@@ -1,36 +1,20 @@
-import os
-
-import discord
-
-import Utils
 from Trophy import Trophy
+from Embeds.BaseEmbed import BaseEmbed
 
 
-class TrophyEmbed:
-    def __init__(self, trophy: Trophy):
+class TrophyEmbed(BaseEmbed):
+    def __init__(self, trophy: Trophy, **kwargs):
+        super().__init__(**kwargs)
         self.trophy = trophy
-        self._embed = discord.Embed(
-            title=trophy.name,
-            description=f"**{trophy.description}**",
-            color=trophy.color if trophy.color else 0xDCDDDC
-        )
+        self.title = trophy.name
+        self.description = f"**{trophy.description}**"
+        self.color = trophy.color if trophy.color else 0xDCDDDC
 
-        trophy_icon = f"assets/textures/{trophy.item_id}.png"
-        self._file = None
-        if os.path.exists(trophy_icon):
-            self._file = discord.File(trophy_icon, filename=f"{trophy.item_id}.png")
-            self._embed.set_thumbnail(url=f"attachment://{trophy.item_id}.png")
+        self._set_file(trophy.item_id, None)
 
         if trophy.advancement_name:
-            self._embed.add_field(name='Awarded for:', value=trophy.advancement_name)
+            self.add_field(name='Awarded for:', value=trophy.advancement_name)
 
         if trophy.enchantments:
             print(trophy.enchantments)
 
-    @property
-    def embed(self):
-        return self._embed
-
-    @property
-    def icon(self):
-        return self._file

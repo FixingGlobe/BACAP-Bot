@@ -5,7 +5,7 @@ import discord.ext.commands as commands
 
 import Utils
 from AdvancementPathsList import AdvancementPathsList
-from Embeds.EmptyRequestEmbed import EmptyRequestEmbed
+from Embeds.PreMadeEmbeds import bad_params
 from Advancement import Advancement
 from AdvancementUtils import advancement_tabs as adv_tabs, advancement_types as adv_types, AdvancementCatalog
 from Messages.AdvancementMessage import AdvancementMessage
@@ -49,9 +49,7 @@ class RandomAdvancement(commands.Cog):
             return await AdvancementMessage(inter=inter, advancement=advancement).send()
 
         # Если нет, то отправляем ошибку
-        embed = EmptyRequestEmbed(title="Advancement not found!",
-                                    description="There aren't any advancements with such parameters.")
-        return await inter.response.send_message(embed=embed.embed, file=embed.icon)
+        return await inter.response.send_message(embed=bad_params, file=bad_params.icon)
 
 
 def setup(bot: commands.Bot):
